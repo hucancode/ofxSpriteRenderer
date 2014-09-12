@@ -1,0 +1,4 @@
+ofxSpriteRenderer
+=================
+
+an openframeworks addon
