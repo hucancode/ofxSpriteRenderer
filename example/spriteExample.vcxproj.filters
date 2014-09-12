@@ -1,0 +1,144 @@
+<?xml version="1.0"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<ItemGroup>
+		<ClCompile Include="src\ofApp.cpp">
+			<Filter>src</Filter>
+		</ClCompile>
+		<ClCompile Include="src\main.cpp">
+			<Filter>src</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\..\addons\ofxSpriteRenderer\src\ofxBitmapFont.cpp">
+			<Filter>addons\ofxSpriteRenderer\src</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\..\addons\ofxSpriteRenderer\src\ofxBitmapFontCache.cpp">
+			<Filter>addons\ofxSpriteRenderer\src</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\..\addons\ofxSpriteRenderer\src\ofxOrthoCamera.cpp">
+			<Filter>addons\ofxSpriteRenderer\src</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\..\addons\ofxSpriteRenderer\src\ofxParticleEffect2D.cpp">
+			<Filter>addons\ofxSpriteRenderer\src</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\..\addons\ofxSpriteRenderer\src\ofxParticleEffect3D.cpp">
+			<Filter>addons\ofxSpriteRenderer\src</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\..\addons\ofxSpriteRenderer\src\ofxResource.cpp">
+			<Filter>addons\ofxSpriteRenderer\src</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\..\addons\ofxSpriteRenderer\src\ofxShader.cpp">
+			<Filter>addons\ofxSpriteRenderer\src</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\..\addons\ofxSpriteRenderer\src\ofxShaderCache.cpp">
+			<Filter>addons\ofxSpriteRenderer\src</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\..\addons\ofxSpriteRenderer\src\ofxShaderProgram.cpp">
+			<Filter>addons\ofxSpriteRenderer\src</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\..\addons\ofxSpriteRenderer\src\ofxShaderProgramCache.cpp">
+			<Filter>addons\ofxSpriteRenderer\src</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\..\addons\ofxSpriteRenderer\src\ofxSpriteAnimation.cpp">
+			<Filter>addons\ofxSpriteRenderer\src</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\..\addons\ofxSpriteRenderer\src\ofxSpriteBase.cpp">
+			<Filter>addons\ofxSpriteRenderer\src</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\..\addons\ofxSpriteRenderer\src\ofxSpriteCommand.cpp">
+			<Filter>addons\ofxSpriteRenderer\src</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\..\addons\ofxSpriteRenderer\src\ofxSpriteQuad.cpp">
+			<Filter>addons\ofxSpriteRenderer\src</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\..\addons\ofxSpriteRenderer\src\ofxSpriteRenderer.cpp">
+			<Filter>addons\ofxSpriteRenderer\src</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\..\addons\ofxSpriteRenderer\src\ofxTexture.cpp">
+			<Filter>addons\ofxSpriteRenderer\src</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\..\addons\ofxSpriteRenderer\src\ofxTextureCache.cpp">
+			<Filter>addons\ofxSpriteRenderer\src</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\..\addons\ofxSpriteRenderer\src\pugixml.cpp">
+			<Filter>addons\ofxSpriteRenderer\src</Filter>
+		</ClCompile>
+	</ItemGroup>
+	<ItemGroup>
+		<Filter Include="src">
+			<UniqueIdentifier>{d8376475-7454-4a24-b08a-aac121d3ad6f}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="addons">
+			<UniqueIdentifier>{71834F65-F3A9-211E-73B8-DC85}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="addons\ofxSpriteRenderer">
+			<UniqueIdentifier>{0AD49AFE-F422-4A28-8C8E-F40D}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="addons\ofxSpriteRenderer\src">
+			<UniqueIdentifier>{87989ED9-ACAC-B9FF-5DD4-EA50}</UniqueIdentifier>
+		</Filter>
+	</ItemGroup>
+	<ItemGroup>
+		<ClInclude Include="src\ofApp.h">
+			<Filter>src</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxSpriteRenderer\src\ofxBitmapFont.h">
+			<Filter>addons\ofxSpriteRenderer\src</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxSpriteRenderer\src\ofxBitmapFontCache.h">
+			<Filter>addons\ofxSpriteRenderer\src</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxSpriteRenderer\src\ofxOrthoCamera.h">
+			<Filter>addons\ofxSpriteRenderer\src</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxSpriteRenderer\src\ofxParticleEffect2D.h">
+			<Filter>addons\ofxSpriteRenderer\src</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxSpriteRenderer\src\ofxParticleEffect3D.h">
+			<Filter>addons\ofxSpriteRenderer\src</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxSpriteRenderer\src\ofxResource.h">
+			<Filter>addons\ofxSpriteRenderer\src</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxSpriteRenderer\src\ofxShader.h">
+			<Filter>addons\ofxSpriteRenderer\src</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxSpriteRenderer\src\ofxShaderCache.h">
+			<Filter>addons\ofxSpriteRenderer\src</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxSpriteRenderer\src\ofxShaderProgram.h">
+			<Filter>addons\ofxSpriteRenderer\src</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxSpriteRenderer\src\ofxShaderProgramCache.h">
+			<Filter>addons\ofxSpriteRenderer\src</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxSpriteRenderer\src\ofxSpriteAnimation.h">
+			<Filter>addons\ofxSpriteRenderer\src</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxSpriteRenderer\src\ofxSpriteBase.h">
+			<Filter>addons\ofxSpriteRenderer\src</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxSpriteRenderer\src\ofxSpriteCommand.h">
+			<Filter>addons\ofxSpriteRenderer\src</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxSpriteRenderer\src\ofxSpriteQuad.h">
+			<Filter>addons\ofxSpriteRenderer\src</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxSpriteRenderer\src\ofxSpriteRenderer.h">
+			<Filter>addons\ofxSpriteRenderer\src</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxSpriteRenderer\src\ofxTexture.h">
+			<Filter>addons\ofxSpriteRenderer\src</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxSpriteRenderer\src\ofxTextureCache.h">
+			<Filter>addons\ofxSpriteRenderer\src</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxSpriteRenderer\src\pugiconfig.hpp">
+			<Filter>addons\ofxSpriteRenderer\src</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxSpriteRenderer\src\pugixml.hpp">
+			<Filter>addons\ofxSpriteRenderer\src</Filter>
+		</ClInclude>
+	</ItemGroup>
+	<ItemGroup>
+		<ResourceCompile Include="icon.rc" />
+	</ItemGroup>
+</Project>
