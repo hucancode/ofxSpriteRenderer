@@ -1,4 +1,4 @@
-ofxSpriteRenderer
+![sprite renderer](https://github.com/ngoaho91/ofxSpriteRenderer/blob/master/ofxaddons_thumbnail.png)
 =================
 
 Key features:
