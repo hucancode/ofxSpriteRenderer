@@ -20,8 +20,13 @@ Usage
 -----------------
 see TestCase.cpp for example usage
 
-LICENSE
+Dependencies
 -----------------
 * pugixml
+* FreeImage
+* openFrameworks
+
+LICENSE
+-----------------
 * GPL, see LICENSE file for more information
 * i do not own the sprite
