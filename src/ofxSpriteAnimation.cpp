@@ -70,6 +70,16 @@ void ofxSpriteAnimation::SetSequence(unsigned short index)
 {
 	m_SequenceIndex = index;
 	m_FrameIndex = m_SequenceBegin[m_SequenceIndex];
+	SetTextureRect(
+		m_TextureRectTable[m_FrameIndex][0],
+		m_TextureRectTable[m_FrameIndex][1],
+		m_TextureRectTable[m_FrameIndex][2],
+		m_TextureRectTable[m_FrameIndex][3]);
+	SetSpriteRect(
+		m_SpriteRectTable[m_FrameIndex][0],
+		m_SpriteRectTable[m_FrameIndex][1],
+		m_SpriteRectTable[m_FrameIndex][2],
+		m_SpriteRectTable[m_FrameIndex][3]);
 }
 void ofxSpriteAnimation::SetSequenceCount(unsigned short count)
 {
@@ -86,8 +96,10 @@ void ofxSpriteAnimation::SetSequenceData(unsigned short index, unsigned short be
 void ofxSpriteAnimation::Update(const float delta_time)
 {
 	ofxSpriteQuad::Update(delta_time);
+	if(m_Occlusion == SPRITE_OCCLUSION_OFF_SCREEN || m_Occlusion == SPRITE_OCCLUSION_UNKNOWN || m_Paused) return;
 	m_AnimationTime += delta_time;
-	if(m_AnimationTime >= m_FrameTime[m_SequenceIndex])
+	bool frame_change = false;
+	while(m_AnimationTime >= m_FrameTime[m_SequenceIndex])
 	{
 		m_AnimationTime -= m_FrameTime[m_SequenceIndex];
 		if(m_FrameIndex == m_SequenceEnd[m_SequenceIndex])
@@ -98,6 +110,10 @@ void ofxSpriteAnimation::Update(const float delta_time)
 		{
 			m_FrameIndex++;
 		}
+		frame_change = true;
+	}
+	if(frame_change)
+	{
 		SetTextureRect(
 			m_TextureRectTable[m_FrameIndex][0],
 			m_TextureRectTable[m_FrameIndex][1],

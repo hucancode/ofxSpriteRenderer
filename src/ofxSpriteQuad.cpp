@@ -116,11 +116,10 @@ void ofxSpriteQuad::SubmitChanges()
 	}
 	if(m_OpacityChange)
 	{
-		float opacity_normalized = m_Opacity/255;
-		m_Vertices[0].opacity = opacity_normalized;
-		m_Vertices[1].opacity = opacity_normalized;
-		m_Vertices[2].opacity = opacity_normalized;
-		m_Vertices[3].opacity = opacity_normalized;
+		m_Vertices[0].opacity = m_Opacity;
+		m_Vertices[1].opacity = m_Opacity;
+		m_Vertices[2].opacity = m_Opacity;
+		m_Vertices[3].opacity = m_Opacity;
 	}
 	m_PositionChange = m_DimensionChange = m_UVChange = m_OpacityChange = false;
 }
@@ -170,12 +169,12 @@ bool ofxSpriteQuad::IsMirrorY()
 {
 	return m_MirrorY;
 }
-void ofxSpriteQuad::SetOpacity(unsigned char value)
+void ofxSpriteQuad::SetOpacity(float value)
 {
 	m_Opacity = value;
 	m_OpacityChange = true;
 }
-unsigned char ofxSpriteQuad::GetOpacity()
+float ofxSpriteQuad::GetOpacity()
 {
 	return m_Opacity;
 }

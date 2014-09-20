@@ -186,6 +186,48 @@ void TextSpriteTest::Render()
 {
 	ofxRENDERER->Render();
 }
+void Particle2DTest::Setup()
+{
+	ofxParticleEffect2D::LoadSharedParticleTexture();
+	ofxParticleEffect2D::BuildForceTable();
+	ofxParticleEffect2D* sprite = new ofxParticleEffect2D();
+	ofxEmitter2D* emitter = new ofxEmitter2D();
+	emitter->position = ofVec2f(0,0);
+	emitter->angle = 0;
+	emitter->angle_var = TWO_PI;
+	emitter->emission_rate = 5;
+	emitter->emission_rate_var = 0;
+	emitter->emission_time = 0.1f;
+	emitter->emission_time_var = 0.0f;
+	emitter->life = 3.0f;
+	emitter->life_var = 0.0f;
+	emitter->radial_accel = 1.0f;
+	emitter->radial_accel_var = 1.0f;
+	emitter->tangental_accel = -2.0f;
+	emitter->tangental_accel_var = 1.0f;
+	emitter->speed = 15.0f;
+	emitter->speed_var = 20.0f;
+	emitter->accel = 10.0f;
+	emitter->accel_var = 15.0f;
+	emitter->radius = 0.0f;
+	emitter->radius_var = 20.0f;
+	// TODO: color
+	emitter->size = 15.0f;
+	emitter->size_var = 35.0f;
+	emitter->size_accel = 10.0f;
+	emitter->opacity = 0.5f;
+	emitter->opacity_var = 0.5f;
+	emitter->opacity_accel = -0.2f;
+	emitter->color_intensity = 0.0f;
+	emitter->color_intensity_var = 1.0f;
+	emitter->color = ofColor(0.0f,0.0f,0.0f);
+	emitter->color_var = ofColor(1.0f,1.0f,1.0f);
+	emitter->color_accel = ofColor(0.1f,0.1f,0.1f);
+
+
+	sprite->AddEmitter(emitter);
+	spriteObstacle = sprite;
+}
 
 void SpriteBenchmarkTest::Setup()
 {
@@ -379,5 +421,57 @@ void TerrainBenchmarkTest::Update()
 void TerrainBenchmarkTest::Render()
 {
 	terrain->RenderTiles();
+	ofxRENDERER->Render();
+}
+void Particle2DBenchmarkTest::Setup()
+{
+	ofxParticleEffect2D::LoadSharedParticleTexture();
+	ofxParticleEffect2D::BuildForceTable();
+	for(int i=0;i<40;i++)
+	{
+		ofxParticleEffect2D* sprite = new ofxParticleEffect2D();
+		ofxEmitter2D* emitter = new ofxEmitter2D();
+		emitter->position = ofVec2f(0,0);
+		emitter->angle = 0;
+		emitter->angle_var = TWO_PI;
+		emitter->emission_rate = 5;
+		emitter->emission_rate_var = 0;
+		emitter->emission_time = 0.1f;
+		emitter->emission_time_var = 0.0f;
+		emitter->life = 3.0f;
+		emitter->life_var = 0.0f;
+		emitter->radial_accel = 1.0f;
+		emitter->radial_accel_var = 1.0f;
+		emitter->tangental_accel = -2.0f;
+		emitter->tangental_accel_var = 1.0f;
+		emitter->speed = 15.0f;
+		emitter->speed_var = 20.0f;
+		emitter->accel = 10.0f;
+		emitter->accel_var = 15.0f;
+		emitter->radius = 0.0f;
+		emitter->radius_var = 20.0f;
+		// TODO: color
+		emitter->size = 15.0f;
+		emitter->size_var = 35.0f;
+		emitter->size_accel = 10.0f;
+		emitter->opacity = 0.5f;
+		emitter->opacity_var = 0.5f;
+		emitter->opacity_accel = -0.2f;
+		emitter->color_intensity = 0.0f;
+		emitter->color_intensity_var = 1.0f;
+		emitter->color = ofColor(0.0f,0.0f,0.0f);
+		emitter->color_var = ofColor(1.0f,1.0f,1.0f);
+		emitter->color_accel = ofColor(0.1f,0.1f,0.1f);
+		sprite->AddEmitter(emitter);
+		spriteObstacle = sprite;
+	}
+	
+}
+void Particle2DBenchmarkTest::Update()
+{
+	ofxRENDERER->Update();
+}
+void Particle2DBenchmarkTest::Render()
+{
 	ofxRENDERER->Render();
 }

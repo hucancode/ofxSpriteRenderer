@@ -45,6 +45,8 @@ bool ofxShaderProgram::Load(string vs_path, string fs_path)
 	{
 		m_AttributeMap["a_position"]			= glGetAttribLocation(m_ProgramId, "a_position");
 		m_AttributeMap["a_uv"]					= glGetAttribLocation(m_ProgramId, "a_uv");
+		m_AttributeMap["a_color"]				= glGetAttribLocation(m_ProgramId, "a_color");
+		m_AttributeMap["a_color_intensity"]		= glGetAttribLocation(m_ProgramId, "a_color_intensity");
 		m_AttributeMap["a_opacity"]				= glGetAttribLocation(m_ProgramId, "a_opacity");
 		m_UniformMap["u_texture"]				= glGetUniformLocation(m_ProgramId, "u_texture");
 		m_UniformMap["u_modelview_matrix"]		= glGetUniformLocation(m_ProgramId, "u_modelview_matrix");
@@ -65,6 +67,12 @@ void ofxShaderProgram::Bind()
 	glEnableVertexAttribArray	(m_AttributeMap["a_uv"]);
 	glVertexAttribPointer		(m_AttributeMap["a_uv"],				2, GL_FLOAT, GL_FALSE, 
 																			stride, (GLvoid*)offsetof(ofxVertex, u));
+	glEnableVertexAttribArray	(m_AttributeMap["a_color"]);
+	glVertexAttribPointer		(m_AttributeMap["a_color"],				3, GL_FLOAT, GL_FALSE, 
+																			stride, (GLvoid*) offsetof(ofxVertex, r));
+	glEnableVertexAttribArray	(m_AttributeMap["a_color_intensity"]);
+	glVertexAttribPointer		(m_AttributeMap["a_color_intensity"],	1, GL_FLOAT, GL_FALSE, 
+																			stride, (GLvoid*) offsetof(ofxVertex, color_intensity));
 	glEnableVertexAttribArray	(m_AttributeMap["a_opacity"]);
 	glVertexAttribPointer		(m_AttributeMap["a_opacity"],			1, GL_FLOAT, GL_FALSE, 
 																			stride, (GLvoid*) offsetof(ofxVertex, opacity));

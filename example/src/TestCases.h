@@ -68,6 +68,13 @@ public:
 	virtual void Update();
 	virtual void Render();
 };
+class Particle2DTest: public Test
+{
+public:
+	virtual void Setup();
+	virtual void Update();
+	virtual void Render();
+};
 //-----------------------------------------------------------
 // STRESS TEST
 // engine runs under strictly environemt, and it must works well
@@ -94,6 +101,13 @@ class AnimationBenchmarkTest: public Test
 private:
 	ofxSpriteQuad* spriteA;
 	ofxSpriteQuad* spriteB;
+public:
+	virtual void Setup();
+	virtual void Update();
+	virtual void Render();
+};
+class Particle2DBenchmarkTest: public Test
+{
 public:
 	virtual void Setup();
 	virtual void Update();

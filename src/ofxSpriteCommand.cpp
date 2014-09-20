@@ -6,7 +6,7 @@ ofxSpriteCommand::ofxSpriteCommand()
 	glGenBuffers(1, &m_VBOId);
 	m_Texture = 0;
 	m_Shader = 0;
-	m_Vertices = new ofxVertex[COMMAND_CAPACITY*4];
+	m_Vertices = new ofxVertex[COMMAND_VERTEX_CAPACITY];
 	m_VerticesSize = 0;
 }
 ofxSpriteCommand::~ofxSpriteCommand()
@@ -27,10 +27,17 @@ void ofxSpriteCommand::Render()
 	m_Shader->Unbind();
 	m_Texture->Unbind();
 }
-void ofxSpriteCommand::PushSprite(ofxSpriteBase* sprite)
+bool ofxSpriteCommand::PushSprite(ofxSpriteBase* sprite)
 {
+	int new_size = m_VerticesSize + sprite->GetVerticesSize();
+	if(new_size >= COMMAND_VERTEX_CAPACITY)
+	{
+		return false;
+	}
 	memcpy(&m_Vertices[m_VerticesSize], sprite->GetVertices(), sizeof(ofxVertex)*sprite->GetVerticesSize());
-	m_VerticesSize += sprite->GetVerticesSize();
+	m_VerticesSize = new_size;
+	return true;
+	
 }
 ofxTexture* ofxSpriteCommand::GetTexture()
 {

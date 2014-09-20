@@ -1,4 +1,5 @@
 #include "ofxSpriteRenderer.h"
+#include "assert.h"
 ofxSpriteRenderer* ofxSpriteRenderer::s_Instance = 0;
 ofxSpriteRenderer* ofxSpriteRenderer::GetInstance()
 {
@@ -63,7 +64,6 @@ void ofxSpriteRenderer::Render()
 	}
 	//unsigned long long time_finish_sort = ofGetSystemTime();
 	//printf("sort time =  %llu\n", time_finish_sort - time_start_build);
-	int sprite_count = 0;
 	for(ofxSpriteBases::iterator it = m_Sprites.begin();it != m_Sprites.end();it++)
 	{
 		ofxSpriteBase* sprite = *it;
@@ -78,25 +78,26 @@ void ofxSpriteRenderer::Render()
 			command = new ofxSpriteCommand();
 			command->SetShader(sprite->GetShader());
 			command->SetTexture(sprite->GetTexture());
+			bool push_success = command->PushSprite(sprite);
+			assert(push_success);
 			m_Commands.push_back(command);
-			sprite_count = 0;
 		}
 		else
 		{
 			command = m_Commands.back();
+			bool push_success = command->PushSprite(sprite);
 			if(command->GetShader() != sprite->GetShader() 
 				|| command->GetTexture() != sprite->GetTexture() 
-				|| sprite_count >= COMMAND_CAPACITY)
+				|| !push_success)
 			{
 				command = new ofxSpriteCommand();
 				command->SetShader(sprite->GetShader());
 				command->SetTexture(sprite->GetTexture());
+				push_success = command->PushSprite(sprite);
 				m_Commands.push_back(command);
-				sprite_count = 0;
+				assert(push_success);
 			}
 		}
-		command->PushSprite(sprite);
-		sprite_count++;
 	}
 	//unsigned long long time_finish_build = ofGetSystemTime();
 	//printf("build time =  %llu\n", time_finish_build - time_start_build);
@@ -144,6 +145,10 @@ void ofxSpriteRenderer::EraseSprite(ofxSpriteBase* sprite)
 
 void ofxSpriteRenderer::Update()
 {
+	float delta_time = 0.0f;
+	
+	if(ofGetFrameRate() > 1)
+		delta_time = 1.0/ofGetFrameRate();
 #ifdef _DEBUG
 	unsigned long long time_start_update = ofGetSystemTime();
 #endif
@@ -162,7 +167,7 @@ void ofxSpriteRenderer::Update()
 	for(;it != m_Sprites.end();it++)
 	{
 		ofxSpriteBase* item = *it;
-		item->Update(0.030f);
+		item->Update(delta_time);
 		item->SubmitChanges();
 	}
 	m_CameraMove = false;

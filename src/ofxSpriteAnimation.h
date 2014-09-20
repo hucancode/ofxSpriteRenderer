@@ -21,6 +21,7 @@ private:
 public:
 	ofxSpriteAnimation();
 	~ofxSpriteAnimation();
+	void					Load(string xml_file);
 	void					SetSequenceTime(unsigned short sequence_index, float time);
 	void					SetFrameTime(unsigned short sequence_index, float time);
 

@@ -19,7 +19,7 @@ protected:
 	float				m_ScaleY;
 	bool				m_MirrorX;
 	bool				m_MirrorY;
-	unsigned char		m_Opacity;
+	float				m_Opacity;
 public:
 	ofxSpriteQuad();
 	~ofxSpriteQuad();
@@ -42,8 +42,8 @@ public:
 	bool				IsMirrorX();
 	void				SetMirrorY(bool value);
 	bool				IsMirrorY();
-	void				SetOpacity(unsigned char value);
-	unsigned char		GetOpacity();
+	void				SetOpacity(float value);
+	float				GetOpacity();
 };
 typedef vector<ofxSpriteQuad*> ofxSpriteQuads;
 #define DEFAULT_SHADER "sprite2d"

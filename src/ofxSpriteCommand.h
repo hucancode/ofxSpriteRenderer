@@ -8,8 +8,7 @@ note: this class is used internally in ofxSpriteRenderer, it's not really useful
 
 */
 
-#define COMMAND_CAPACITY 5000
-
+#define COMMAND_VERTEX_CAPACITY 20000
 class ofxSpriteCommand
 {
 #ifdef _DEBUG
@@ -26,7 +25,7 @@ public:
 	~ofxSpriteCommand();
 public:
 	void					Render();
-	void					PushSprite(ofxSpriteBase* sprite);
+	bool					PushSprite(ofxSpriteBase* sprite);
 	ofxTexture*				GetTexture();
 	ofxShaderProgram*		GetShader();
 	void					SetTexture(ofxTexture* texture);
