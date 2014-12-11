@@ -75,6 +75,13 @@ public:
 	virtual void Update();
 	virtual void Render();
 };
+class TextureCompressionTest: public Test
+{
+public:
+	virtual void Setup();
+	virtual void Update();
+	virtual void Render();
+};
 //-----------------------------------------------------------
 // STRESS TEST
 // engine runs under strictly environemt, and it must works well
@@ -107,6 +114,13 @@ public:
 	virtual void Render();
 };
 class Particle2DBenchmarkTest: public Test
+{
+public:
+	virtual void Setup();
+	virtual void Update();
+	virtual void Render();
+};
+class TextureBenchmarkTest: public Test
 {
 public:
 	virtual void Setup();

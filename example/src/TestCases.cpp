@@ -3,9 +3,14 @@
 #include "ofxShaderCache.h"
 #include "ofxShaderProgramCache.h"
 #include "ofxBitmapFontCache.h"
-Test* current_test = new SortBenchmarkTest();
+#include "ofxParticleEffect2D.h"
+#include "IL/il.h"
+
+Test* current_test = new Particle2DBenchmarkTest();
+ofxBaseSprite* spriteObstacle;
 void Test::Setup()
 {
+
 }
 void Test::Update()
 {
@@ -17,6 +22,7 @@ void SpriteTest::Setup()
 {
 	ofxSpriteQuad* sprite = new ofxSpriteQuad();
 	sprite->SetTexture("data/psk_actor_idle.png");
+	spriteObstacle = sprite;
 }
 void SpriteTest::Update()
 {
@@ -35,6 +41,7 @@ void RendererTest::Setup()
 			ofxSpriteQuad* sprite = new ofxSpriteQuad();
 			sprite->SetTexture("data/psk_actor_idle.png");
 			sprite->MoveTo(i*192.0f,0.0f,j*192.0f);
+			if(i==0 && j==0) spriteObstacle = sprite;
 		}
 	}
 }
@@ -62,6 +69,7 @@ void SortingTest::Setup()
 			if(i==1 && j==1) spriteB = sprite;
 		}
 	}
+	spriteObstacle = spriteA;
 	
 }
 void SortingTest::Update()
@@ -99,6 +107,7 @@ void TextureTest::Setup()
 			ofxSpriteQuad* sprite = new ofxSpriteQuad();
 			sprite->SetTexture(("data/sprite"+ofToString(abs(j)%5+1)+".png").c_str());
 			sprite->MoveTo(i*space_x,0.0f,j*space_y);
+			if(i==0 && j==0) spriteObstacle = sprite;
 		}
 	}
 }
@@ -114,7 +123,7 @@ void TextureTest::Render()
 void AnimationTest::Setup()
 {
 	ofxSpriteAnimation* animation = new ofxSpriteAnimation();
-	animation->SetTexture("data/animal_tiger1_attack.png");
+	animation->SetTexture("data/psk_actor.png");
 	animation->MoveTo(0.0f,0.0f,0.0f);
 	animation->SetFrameCount(24);
 	animation->SetSequenceCount(2);
@@ -122,34 +131,27 @@ void AnimationTest::Setup()
 	animation->SetFrameTime(1,0.1f);
 	{
 		int i=0;
-		animation->SetFrameData(i++,1,1,27,72,147,134,27,72);
-		animation->SetFrameData(i++,1,76,27,72,147,134,27,72);
-		animation->SetFrameData(i++,31,1,28,73,146,133,28,73);
-		animation->SetFrameData(i++,62,1,28,72,146,134,28,72);
-		animation->SetFrameData(i++,31,77,28,75,147,136,28,75);
-		animation->SetFrameData(i++,62,76,27,71,147,133,27,71);
-		animation->SetFrameData(i++,93,1,27,67,147,126,27,67);
-		animation->SetFrameData(i++,123,1,28,78,146,131,28,78);
-		animation->SetFrameData(i++,93,71,27,78,147,135,27,78);
-		animation->SetFrameData(i++,1,151,27,75,147,140,27,75);
-		animation->SetFrameData(i++,31,155,28,68,146,146,28,68);
-		animation->SetFrameData(i++,62,150,28,72,146,140,28,72);
+		// run
+		for(int x=0;x<3;x++)
+		{
+			for(int y=0;y<4;y++)
+			{
+				animation->SetFrameData(i++,x*170,y*170,170,170,0,0,170,170);
+			}
+		}
 		animation->SetSequenceData(0,0,11);
-		animation->SetFrameData(i++,154,1,93,67,113,139,93,67);
-		animation->SetFrameData(i++,123,82,94,62,114,140,94,62);
-		animation->SetFrameData(i++,93,152,93,62,118,140,93,62);
-		animation->SetFrameData(i++,250,1,94,62,120,140,94,62);
-		animation->SetFrameData(i++,220,82,97,60,119,143,97,60);
-		animation->SetFrameData(i++,189,152,118,55,99,144,118,55);
-		animation->SetFrameData(i++,347,1,117,55,85,134,117,55);
-		animation->SetFrameData(i++,320,82,115,56,84,138,115,56);
-		animation->SetFrameData(i++,310,152,112,55,88,143,112,55);
-		animation->SetFrameData(i++,467,1,109,52,94,149,109,52);
-		animation->SetFrameData(i++,438,82,106,54,99,149,106,54);
-		animation->SetFrameData(i++,425,152,101,62,105,144,101,62);
+		// respawn
+		for(int x=3;x<6;x++)
+		{
+			for(int y=0;y<4;y++)
+			{
+				animation->SetFrameData(i++,x*170,y*170,170,170,0,0,170,170);
+			}
+		}
 		animation->SetSequenceData(1,12,23);
 	}
 	animation->SetSequence(0);
+	spriteObstacle = animation;
 }
 void AnimationTest::Update()
 {
@@ -159,24 +161,24 @@ void AnimationTest::Render()
 {
 	ofxRENDERER->Render();
 }
-
 void TextSpriteTest::Setup()
 {
 	string header = "this is a header, so i draw it big";
 	string text = "hello world, this is a long long long text.";
 	ofxBitmapFont* font = ofxBITMAPFONTCACHE->GetResource("data/verdana.xml");
 	ofxTexture* texture = new ofxTexture();
-	ofVec2f dimension_header = font->GetTextDimension(header, 44);
+	ofVec2f dimension_header = font->GetTextDimension(header, 22);
 	ofVec2f dimension_text = font->GetTextDimension(text);
 	texture->Allocate(max(dimension_header.x, dimension_text.x), dimension_header.y+dimension_text.y);
-	texture->DrawString(header, font, ofVec2f(0,0), 44);
+	texture->DrawString(header, font, ofVec2f(0,0), 22);
 	texture->DrawString(text, font, ofVec2f(0,dimension_header.y));
-	texture->FlipY();
 	texture->SubmitChanges();
-	ofxTEXTURECACHE->PushResource(texture, "txt_verdana"+text);
+	std::string texture_name = "txt_verdana"+text;
+	ofxTEXTURECACHE->PushResource(texture, texture_name);
 	ofxSpriteQuad* sprite = new ofxSpriteQuad();
-	sprite->SetTexture("txt_verdana"+text);
+	sprite->SetTexture(texture_name);
 	//sprite->SetOpacity(100);
+	spriteObstacle = sprite;
 }
 void TextSpriteTest::Update()
 {
@@ -228,7 +230,33 @@ void Particle2DTest::Setup()
 	sprite->AddEmitter(emitter);
 	spriteObstacle = sprite;
 }
-
+void Particle2DTest::Update()
+{
+	ofxRENDERER->Update();
+}
+void Particle2DTest::Render()
+{
+	ofxRENDERER->Render();
+}
+void TextureCompressionTest::Setup()
+{
+	//ofxSpriteQuad* sprite1 = new ofxSpriteQuad();
+	//sprite1->SetTexture("data/sprite1.png");
+	ofxSpriteQuad* sprite2 = new ofxSpriteQuad();
+	sprite2->MoveBy(200.0f,0.0f,0.0f);
+	sprite2->SetTexture("data/tianwang3_0.png");
+	sprite2->GetTexture()->SetCompressed(true);
+	sprite2->GetTexture()->SubmitChanges();
+	spriteObstacle = sprite2;
+}
+void TextureCompressionTest::Update()
+{
+	ofxRENDERER->Update();
+}
+void TextureCompressionTest::Render()
+{
+	ofxRENDERER->Render();
+}
 void SpriteBenchmarkTest::Setup()
 {
 	float space_x = 192.0f;
@@ -240,6 +268,7 @@ void SpriteBenchmarkTest::Setup()
 			ofxSpriteQuad* sprite = new ofxSpriteQuad();
 			sprite->SetTexture("data/psk_actor_idle.png");
 			sprite->MoveTo(i*space_x,0.0f,j*space_y);
+			if(i==0 && j==0) spriteObstacle = sprite;
 		}
 	}
 }
@@ -262,6 +291,7 @@ void SortBenchmarkTest::Setup()
 			ofxSpriteQuad* sprite = new ofxSpriteQuad();
 			sprite->SetTexture(("data/sprite"+ofToString(abs(j)%5+1)+".png").c_str());
 			sprite->MoveTo(i*space_x,0.0f,j*space_y);
+			if(i==0 && j==0) spriteObstacle = sprite;
 			if(i==0 && j==0) spriteA = sprite;
 			if(i==1 && j==1) spriteB = sprite;
 		}
@@ -297,7 +327,7 @@ void AnimationBenchmarkTest::Setup()
 		for(int j=-50;j<50;j++)
 		{
 			ofxSpriteAnimation* animation = new ofxSpriteAnimation();
-			animation->SetTexture("data/animal_tiger1_attack.png");
+			animation->SetTexture("data/psk_actor.png");
 			animation->MoveTo(i*space_x,0.0f,j*space_y);
 			animation->SetFrameCount(24);
 			animation->SetSequenceCount(2);
@@ -305,34 +335,27 @@ void AnimationBenchmarkTest::Setup()
 			animation->SetFrameTime(1,0.1f);
 			{
 				int i=0;
-				animation->SetFrameData(i++,1,1,27,72,147,134,27,72);
-				animation->SetFrameData(i++,1,76,27,72,147,134,27,72);
-				animation->SetFrameData(i++,31,1,28,73,146,133,28,73);
-				animation->SetFrameData(i++,62,1,28,72,146,134,28,72);
-				animation->SetFrameData(i++,31,77,28,75,147,136,28,75);
-				animation->SetFrameData(i++,62,76,27,71,147,133,27,71);
-				animation->SetFrameData(i++,93,1,27,67,147,126,27,67);
-				animation->SetFrameData(i++,123,1,28,78,146,131,28,78);
-				animation->SetFrameData(i++,93,71,27,78,147,135,27,78);
-				animation->SetFrameData(i++,1,151,27,75,147,140,27,75);
-				animation->SetFrameData(i++,31,155,28,68,146,146,28,68);
-				animation->SetFrameData(i++,62,150,28,72,146,140,28,72);
+				// run
+				for(int x=0;x<3;x++)
+				{
+					for(int y=0;y<4;y++)
+					{
+						animation->SetFrameData(i++,x*170,y*170,170,170,0,0,170,170);
+					}
+				}
 				animation->SetSequenceData(0,0,11);
-				animation->SetFrameData(i++,154,1,93,67,113,139,93,67);
-				animation->SetFrameData(i++,123,82,94,62,114,140,94,62);
-				animation->SetFrameData(i++,93,152,93,62,118,140,93,62);
-				animation->SetFrameData(i++,250,1,94,62,120,140,94,62);
-				animation->SetFrameData(i++,220,82,97,60,119,143,97,60);
-				animation->SetFrameData(i++,189,152,118,55,99,144,118,55);
-				animation->SetFrameData(i++,347,1,117,55,85,134,117,55);
-				animation->SetFrameData(i++,320,82,115,56,84,138,115,56);
-				animation->SetFrameData(i++,310,152,112,55,88,143,112,55);
-				animation->SetFrameData(i++,467,1,109,52,94,149,109,52);
-				animation->SetFrameData(i++,438,82,106,54,99,149,106,54);
-				animation->SetFrameData(i++,425,152,101,62,105,144,101,62);
+				// respawn
+				for(int x=3;x<6;x++)
+				{
+					for(int y=0;y<4;y++)
+					{
+						animation->SetFrameData(i++,x*170,y*170,170,170,0,0,170,170);
+					}
+				}
 				animation->SetSequenceData(1,12,23);
 			}
 			animation->SetSequence(0);
+			if(i==0 && j==0) spriteObstacle = animation;
 			if(i==0 && j==0) spriteA = animation;
 			if(i==1 && j==1) spriteB = animation;
 		}
@@ -357,71 +380,6 @@ void AnimationBenchmarkTest::Render()
 	printf("update time = %u\nrender time = %u\n",
 		ofxRENDERER->GetUpdateTimeMilisecond(),
 		ofxRENDERER->GetRenderTimeMilisecond());
-}
-void TerrainBenchmarkTest::Setup()
-{
-	const int TERRAIN_WIDTH = 1000;
-	const int TERRAIN_HEIGHT = 1000;
-	const int SEED_MAX_WIDTH = 10;
-	const int SEED_MAX_HEIGHT = 10;
-	const int SEED_MAX_TRACE_X = 10;
-	const int SEED_MAX_TRACE_Y = 10;
-	terrain = new ofxTerrain();
-	terrain->Initialize(TERRAIN_WIDTH, TERRAIN_HEIGHT);
-	terrain->LoadBaseTexture("data/base24.png");
-	terrain->LoadGroundTexture("data/tile.png", 0);
-
-	// --------- this is a stupid terrain generating algorithm, you don't need to check
-	for(int i=0;i<50;i++)
-	{
-		int x = ofRandom(0, TERRAIN_WIDTH - max(SEED_MAX_WIDTH,SEED_MAX_TRACE_X) - 1);
-		int y = ofRandom(0, TERRAIN_HEIGHT - max(SEED_MAX_HEIGHT,SEED_MAX_TRACE_Y) - 1);
-		int spread_x = ofRandom(0, SEED_MAX_WIDTH);
-		int spread_y = ofRandom(0, SEED_MAX_HEIGHT);
-		for(int j=0;j<spread_x;j++)
-		{
-			for(int k=0;k<spread_y;k++)
-			{
-				terrain->PaintTile(x+j, y+k);
-			}
-		}
-		int trace_x = ofRandom(0, SEED_MAX_TRACE_X);
-		int trace_y = ofRandom(0, SEED_MAX_TRACE_Y);
-		for(int j=0;j<trace_x;j++)
-		{
-			terrain->PaintTile(x+j, y);
-			terrain->PaintTile(x+j+1, y);
-			terrain->PaintTile(x+j+1, y+1);
-			terrain->PaintTile(x+j, y+1);
-		}
-		for(int j=0;j<trace_y;j++)
-		{
-			terrain->PaintTile(x, y+j);
-			terrain->PaintTile(x+1, y+j);
-			terrain->PaintTile(x+1, y+j+1);
-			terrain->PaintTile(x, y+j+1);
-		}
-	}
-	//--------------
-	terrain->BuildTileMap();
-	for(int i=-40;i<40;i++)
-	{
-		for(int j=-40;j<40;j++)
-		{
-			ofxSpriteQuad* sprite = new ofxSpriteQuad();
-			sprite->SetTexture("data/psk_actor_idle.png");
-			sprite->MoveTo(i*192.0f,0.0f,j*192.0f);
-		}
-	}
-}
-void TerrainBenchmarkTest::Update()
-{
-	ofxRENDERER->Update();
-}
-void TerrainBenchmarkTest::Render()
-{
-	terrain->RenderTiles();
-	ofxRENDERER->Render();
 }
 void Particle2DBenchmarkTest::Setup()
 {
@@ -463,6 +421,7 @@ void Particle2DBenchmarkTest::Setup()
 		emitter->color_var = ofColor(1.0f,1.0f,1.0f);
 		emitter->color_accel = ofColor(0.1f,0.1f,0.1f);
 		sprite->AddEmitter(emitter);
+		sprite->SetGrounded(true);
 		spriteObstacle = sprite;
 	}
 	
@@ -472,6 +431,65 @@ void Particle2DBenchmarkTest::Update()
 	ofxRENDERER->Update();
 }
 void Particle2DBenchmarkTest::Render()
+{
+	ofxRENDERER->Render();
+}
+void TextureBenchmarkTest::Setup()
+{
+	{ofxSpriteQuad* sprite = new ofxSpriteQuad();sprite->SetTexture("data/tianwang_cloth/tianwang3_attack_dual_weapon_crit.png"); sprite->GetTexture()->Lock();}
+	{ofxSpriteQuad* sprite = new ofxSpriteQuad();sprite->SetTexture("data/tianwang_cloth/tianwang3_attack_flying_dagger.png"); sprite->GetTexture()->Lock();}
+	{ofxSpriteQuad* sprite = new ofxSpriteQuad();sprite->SetTexture("data/tianwang_cloth/tianwang3_attack_horse_no_weapon.png"); sprite->GetTexture()->Lock();}
+	{ofxSpriteQuad* sprite = new ofxSpriteQuad();sprite->SetTexture("data/tianwang_cloth/tianwang3_attack_horse_no_weapon_crit.png"); sprite->GetTexture()->Lock();}
+	{ofxSpriteQuad* sprite = new ofxSpriteQuad();sprite->SetTexture("data/tianwang_cloth/tianwang3_attack_no_weapon.png"); sprite->GetTexture()->Lock();}
+	{ofxSpriteQuad* sprite = new ofxSpriteQuad();sprite->SetTexture("data/tianwang_cloth/tianwang3_attack_one_hand_weapon.png"); sprite->GetTexture()->Lock();}
+	{ofxSpriteQuad* sprite = new ofxSpriteQuad();sprite->SetTexture("data/tianwang_cloth/tianwang3_attack_one_hand_weapon_crit.png"); sprite->GetTexture()->Lock();}
+	{ofxSpriteQuad* sprite = new ofxSpriteQuad();sprite->SetTexture("data/tianwang_cloth/tianwang3_attack_two_hand_weapon.png"); sprite->GetTexture()->Lock();}
+	{ofxSpriteQuad* sprite = new ofxSpriteQuad();sprite->SetTexture("data/tianwang_cloth/tianwang3_attack_two_hand_weapon_crit.png"); sprite->GetTexture()->Lock();}
+	{ofxSpriteQuad* sprite = new ofxSpriteQuad();sprite->SetTexture("data/tianwang_cloth/tianwang3_fall_dual_weapon.png"); sprite->GetTexture()->Lock();}
+	{ofxSpriteQuad* sprite = new ofxSpriteQuad();sprite->SetTexture("data/tianwang_cloth/tianwang3_fall_horse_no_weapon.png"); sprite->GetTexture()->Lock();}
+	{ofxSpriteQuad* sprite = new ofxSpriteQuad();sprite->SetTexture("data/tianwang_cloth/tianwang3_fall_no_weapon.png"); sprite->GetTexture()->Lock();}
+	{ofxSpriteQuad* sprite = new ofxSpriteQuad();sprite->SetTexture("data/tianwang_cloth/tianwang3_fall_one_hand_weapon.png"); sprite->GetTexture()->Lock();}
+	{ofxSpriteQuad* sprite = new ofxSpriteQuad();sprite->SetTexture("data/tianwang_cloth/tianwang3_fall_two_hand_weapon.png"); sprite->GetTexture()->Lock();}
+	{ofxSpriteQuad* sprite = new ofxSpriteQuad();sprite->SetTexture("data/tianwang_cloth/tianwang3_hurt_dual_weapon.png"); sprite->GetTexture()->Lock();}
+	{ofxSpriteQuad* sprite = new ofxSpriteQuad();sprite->SetTexture("data/tianwang_cloth/tianwang3_hurt_horse_no_weapon.png"); sprite->GetTexture()->Lock();}
+	{ofxSpriteQuad* sprite = new ofxSpriteQuad();sprite->SetTexture("data/tianwang_cloth/tianwang3_hurt_no_weapon.png"); sprite->GetTexture()->Lock();}
+	{ofxSpriteQuad* sprite = new ofxSpriteQuad();sprite->SetTexture("data/tianwang_cloth/tianwang3_hurt_one_hand_weapon.png"); sprite->GetTexture()->Lock();}
+	{ofxSpriteQuad* sprite = new ofxSpriteQuad();sprite->SetTexture("data/tianwang_cloth/tianwang3_hurt_two_hand_weapon.png"); sprite->GetTexture()->Lock();}
+	{ofxSpriteQuad* sprite = new ofxSpriteQuad();sprite->SetTexture("data/tianwang_cloth/tianwang3_idle_horse_no_weapon.png"); sprite->GetTexture()->Lock();}
+	{ofxSpriteQuad* sprite = new ofxSpriteQuad();sprite->SetTexture("data/tianwang_cloth/tianwang3_idle_no_weapon.png"); sprite->GetTexture()->Lock();}
+	{ofxSpriteQuad* sprite = new ofxSpriteQuad();sprite->SetTexture("data/tianwang_cloth/tianwang3_idle_one_hand_weapon.png"); sprite->GetTexture()->Lock();}
+	{ofxSpriteQuad* sprite = new ofxSpriteQuad();sprite->SetTexture("data/tianwang_cloth/tianwang3_jump.png"); sprite->GetTexture()->Lock();}
+	{ofxSpriteQuad* sprite = new ofxSpriteQuad();sprite->SetTexture("data/tianwang_cloth/tianwang3_magic_dual_weapon.png"); sprite->GetTexture()->Lock();}
+	{ofxSpriteQuad* sprite = new ofxSpriteQuad();sprite->SetTexture("data/tianwang_cloth/tianwang3_magic_horse_no_weapon.png"); sprite->GetTexture()->Lock();}
+	{ofxSpriteQuad* sprite = new ofxSpriteQuad();sprite->SetTexture("data/tianwang_cloth/tianwang3_magic_no_weapon.png"); sprite->GetTexture()->Lock();}
+	{ofxSpriteQuad* sprite = new ofxSpriteQuad();sprite->SetTexture("data/tianwang_cloth/tianwang3_magic_one_hand_weapon.png"); sprite->GetTexture()->Lock();}
+	{ofxSpriteQuad* sprite = new ofxSpriteQuad();sprite->SetTexture("data/tianwang_cloth/tianwang3_magic_two_hand_weapon.png"); sprite->GetTexture()->Lock();}
+	{ofxSpriteQuad* sprite = new ofxSpriteQuad();sprite->SetTexture("data/tianwang_cloth/tianwang3_ready_dual_weapon.png"); sprite->GetTexture()->Lock();}
+	{ofxSpriteQuad* sprite = new ofxSpriteQuad();sprite->SetTexture("data/tianwang_cloth/tianwang3_ready_no_weapon.png"); sprite->GetTexture()->Lock();}
+	{ofxSpriteQuad* sprite = new ofxSpriteQuad();sprite->SetTexture("data/tianwang_cloth/tianwang3_ready_one_hand_weapon.png"); sprite->GetTexture()->Lock();}
+	{ofxSpriteQuad* sprite = new ofxSpriteQuad();sprite->SetTexture("data/tianwang_cloth/tianwang3_ready_two_hand_weapon.png"); sprite->GetTexture()->Lock();}
+	{ofxSpriteQuad* sprite = new ofxSpriteQuad();sprite->SetTexture("data/tianwang_cloth/tianwang3_run_dual_weapon.png"); sprite->GetTexture()->Lock();}
+	{ofxSpriteQuad* sprite = new ofxSpriteQuad();sprite->SetTexture("data/tianwang_cloth/tianwang3_run_horse_no_weapon.png"); sprite->GetTexture()->Lock();}
+	{ofxSpriteQuad* sprite = new ofxSpriteQuad();sprite->SetTexture("data/tianwang_cloth/tianwang3_run_no_weapon.png"); sprite->GetTexture()->Lock();}
+	{ofxSpriteQuad* sprite = new ofxSpriteQuad();sprite->SetTexture("data/tianwang_cloth/tianwang3_run_one_hand_weapon.png"); sprite->GetTexture()->Lock();}
+	{ofxSpriteQuad* sprite = new ofxSpriteQuad();sprite->SetTexture("data/tianwang_cloth/tianwang3_run_two_hand_weapon.png"); sprite->GetTexture()->Lock();}
+	{ofxSpriteQuad* sprite = new ofxSpriteQuad();sprite->SetTexture("data/tianwang_cloth/tianwang3_walk_dual_weapon.png"); sprite->GetTexture()->Lock();}
+	{ofxSpriteQuad* sprite = new ofxSpriteQuad();sprite->SetTexture("data/tianwang_cloth/tianwang3_walk_horse_no_weapon.png"); sprite->GetTexture()->Lock();}
+	{ofxSpriteQuad* sprite = new ofxSpriteQuad();sprite->SetTexture("data/tianwang_cloth/tianwang3_walk_no_weapon.png"); sprite->GetTexture()->Lock();}
+	{ofxSpriteQuad* sprite = new ofxSpriteQuad();sprite->SetTexture("data/tianwang_cloth/tianwang3_walk_one_hand_weapon.png"); sprite->GetTexture()->Lock();}
+	{ofxSpriteQuad* sprite = new ofxSpriteQuad();sprite->SetTexture("data/tianwang_cloth/tianwang3_walk_two_hand_weapon.png"); sprite->GetTexture()->Lock();}
+	{ofxSpriteQuad* sprite = new ofxSpriteQuad();sprite->SetTexture("data/tianwang_cloth/tianwang3_zen.png"); sprite->GetTexture()->Lock();}
+	{
+		ofxSpriteQuad* sprite = new ofxSpriteQuad();
+		sprite->SetTexture("data/tianwang_cloth/tianwang3_attack_dual_weapon.png");
+		spriteObstacle = sprite;
+	}
+}
+void TextureBenchmarkTest::Update()
+{
+	ofxRENDERER->Update();
+}
+void TextureBenchmarkTest::Render()
 {
 	ofxRENDERER->Render();
 }
