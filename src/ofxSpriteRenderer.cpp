@@ -23,35 +23,29 @@ ofxSpriteRenderer::ofxSpriteRenderer()
 }
 ofxSpriteRenderer::~ofxSpriteRenderer()
 {
+	for(ofxBaseCommands::iterator it = m_Commands.begin();it != m_Commands.end();it++)
 	{
-		ofxSpriteCommands::iterator it = m_Commands.begin();
-		for(;it != m_Commands.end();it++)
-		{
-			ofxSpriteCommand* cmd = *it;
-			delete cmd;
-		}
-		m_Commands.clear();
+		ofxBaseCommand* cmd = *it;
+		delete cmd;
 	}
+	m_Commands.clear();
+	for(ofxBaseSprites::iterator it = m_Sprites.begin();it != m_Sprites.end();it++)
 	{
-		ofxSpriteBases::iterator it = m_Sprites.begin();
-		for(;it != m_Sprites.end();it++)
-		{
-			ofxSpriteBase* quad = *it;
-			delete quad;
-		}
-		m_Sprites.clear();
+		ofxBaseSprite* quad = *it;
+		delete quad;
 	}
+	m_Sprites.clear();
 }
-static bool QuadCompare(ofxSpriteBase* quadA, ofxSpriteBase* quadB)
+static bool QuadCompare(ofxBaseSprite* quadA, ofxBaseSprite* quadB)
 {
 	return quadA->GetPosition().z < quadB->GetPosition().z;
 }
 void ofxSpriteRenderer::Render()
 {
 	//printf("--------------RENDER--------------\n");
-	for(ofxSpriteCommands::iterator it = m_Commands.begin();it != m_Commands.end();it++)
+	for(ofxBaseCommands::iterator it = m_Commands.begin();it != m_Commands.end();it++)
 	{
-		ofxSpriteCommand* item = *it;
+		ofxBaseCommand* item = *it;
 		delete item;
 	}
 	m_Commands.clear();
@@ -64,16 +58,24 @@ void ofxSpriteRenderer::Render()
 	}
 	//unsigned long long time_finish_sort = ofGetSystemTime();
 	//printf("sort time =  %llu\n", time_finish_sort - time_start_build);
-	for(ofxSpriteBases::iterator it = m_Sprites.begin();it != m_Sprites.end();it++)
+	bool is_custom_command = false;
+	for(ofxBaseSprites::iterator it = m_Sprites.begin();it != m_Sprites.end();it++)
 	{
-		ofxSpriteBase* sprite = *it;
+		ofxBaseSprite* sprite = *it;
 		if(!(sprite->GetOcclusion() == SPRITE_OCCLUSION_IN_SCREEN || sprite->GetOcclusion() == SPRITE_OCCLUSION_UNKNOWN) ||
 			!sprite->IsVisible())
 		{
 			continue;
 		}
+		if(sprite->IsCustomRendered())
+		{
+			ofxBaseCommand* command = (ofxBaseCommand*)sprite;
+			m_Commands.push_back(command);
+			is_custom_command = true;
+			continue;
+		}
 		ofxSpriteCommand* command;
-		if(m_Commands.size() == 0)
+		if(m_Commands.size() == 0 || is_custom_command)
 		{
 			command = new ofxSpriteCommand();
 			command->SetShader(sprite->GetShader());
@@ -81,10 +83,11 @@ void ofxSpriteRenderer::Render()
 			bool push_success = command->PushSprite(sprite);
 			assert(push_success);
 			m_Commands.push_back(command);
+			is_custom_command = false;
 		}
 		else
 		{
-			command = m_Commands.back();
+			command = (ofxSpriteCommand*)m_Commands.back();
 			bool push_success = command->PushSprite(sprite);
 			if(command->GetShader() != sprite->GetShader() 
 				|| command->GetTexture() != sprite->GetTexture() 
@@ -113,13 +116,13 @@ void ofxSpriteRenderer::Render()
 		glEnable(GL_BLEND);
 		//glDisable(GL_DEPTH_TEST);// transparent isn't work well with depth test
 		glDepthMask(GL_FALSE);
-		for(ofxSpriteCommands::iterator it = m_Commands.begin();it != m_Commands.end();it++)
+		for(ofxBaseCommands::iterator it = m_Commands.begin();it != m_Commands.end();it++)
 		{
-			ofxSpriteCommand* cmd = *it;
+			ofxBaseCommand* cmd = *it;
 			cmd->Render();
 #ifdef _DEBUG
 			m_DrawnBatches++;
-			m_DrawnVertices += cmd->GetVerticesSize();
+			m_DrawnVertices += cmd->GetRenderedVertices();
 #endif
 		}
 		//glEnable(GL_DEPTH_TEST);
@@ -132,12 +135,12 @@ void ofxSpriteRenderer::Render()
 	m_RenderTimeMilisecond = time_finish_render - time_start_render;
 #endif
 }
-void ofxSpriteRenderer::PushSprite(ofxSpriteBase* sprite)
+void ofxSpriteRenderer::PushSprite(ofxBaseSprite* sprite)
 {
 	sprite->SetID(m_Sprites.size());
 	m_Sprites.push_back(sprite);
 }
-void ofxSpriteRenderer::EraseSprite(ofxSpriteBase* sprite)
+void ofxSpriteRenderer::EraseSprite(ofxBaseSprite* sprite)
 {
 	m_Sprites.erase(m_Sprites.begin() + sprite->GetID());
 	sprite->SetID(-1);
@@ -163,10 +166,10 @@ void ofxSpriteRenderer::Update()
 		m_WorldRect.y - FAR_SCREEN_DISTANCE_THRESHOLD, 
 		m_WorldRect.width + FAR_SCREEN_DISTANCE_THRESHOLD*2, 
 		m_WorldRect.height + FAR_SCREEN_DISTANCE_THRESHOLD*2);
-	ofxSpriteBases::iterator it = m_Sprites.begin();
+	ofxBaseSprites::iterator it = m_Sprites.begin();
 	for(;it != m_Sprites.end();it++)
 	{
-		ofxSpriteBase* item = *it;
+		ofxBaseSprite* item = *it;
 		item->Update(delta_time);
 		item->SubmitChanges();
 	}

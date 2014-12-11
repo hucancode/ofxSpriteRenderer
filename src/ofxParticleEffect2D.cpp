@@ -5,12 +5,14 @@
 
 ofxParticleEffect2D::ofxParticleEffect2D()
 {
-	ofxSpriteBase::ofxSpriteBase();
+	ofxBaseSprite::ofxBaseSprite();
 	m_Vertices = new ofxVertex[MAX_PARTICLE2D_COUNT*4];
 	m_ParticleCount = 0;
 	m_Paused = false;
+	m_Stopped = false;
+	m_Grounded = false;
 	m_Texture = m_SharedParticleTexture;
-	LoadShader(DEFAULT_PARTICLE_SHADER);
+	LoadShader(DEFAULT_PARTICLE2D_SHADER);
 	ofxRENDERER->PushSprite(this);
 }
 ofxParticleEffect2D::~ofxParticleEffect2D()
@@ -40,6 +42,15 @@ void ofxParticleEffect2D::Update(float delta_time)
 			{
 				m_ParticleCount = MAX_PARTICLE2D_COUNT;
 			}
+			ofVec2f offset;
+			if(m_Grounded)
+			{
+				offset = ofVec2f(m_Position.x+e->position.x, m_Position.z+e->position.y);
+			}
+			else
+			{
+				offset = ofVec2f(m_Position.x+e->position.x, m_Position.y+e->position.y);
+			}
 			//ofLogNotice() << "emitting "<<m_ParticleCount<<endl;
 			for(;j<m_ParticleCount;j++)
 			{
@@ -54,7 +65,7 @@ void ofxParticleEffect2D::Update(float delta_time)
 				// position
 				float radius = e->radius + ofRandom(e->radius_var);
 				float angle = e->angle + ofRandom(e->angle_var);
-				item.position = radius*ofVec2f(1,1).rotateRad(angle);
+				item.position = offset+radius*ofVec2f(1,1).rotateRad(angle);
 				item.size = e->size + ofRandom(e->size_var);
 				// uv
 				ofRectangle texture_rect = m_SharedParticleUVs[(int)ofRandom(m_SharedParticleUVs.size()-1)];
@@ -66,7 +77,7 @@ void ofxParticleEffect2D::Update(float delta_time)
 				item.vertices[2].v = texture_rect.getMaxY();
 				item.vertices[3].u = texture_rect.getMinX();
 				item.vertices[3].v = texture_rect.getMaxY();
-				// TODO: color
+				// color
 				float r = e->color.r + ofRandom(e->color_var.r);
 				float g = e->color.g + ofRandom(e->color_var.g);
 				float b = e->color.b + ofRandom(e->color_var.b);
@@ -122,22 +133,39 @@ void ofxParticleEffect2D::Update(float delta_time)
 			ofVec2f tangental_force = distance*item.tangental_accel*GetForceFromAngle(tangental);
 			item.position += radial_force;
 			item.position += tangental_force;
-
 			float half_size = item.size*0.5f;
-			item.vertices[0].x = item.position.x - half_size;
-			item.vertices[0].y = item.position.y - half_size;
-			item.vertices[0].z = m_Position.z;
-			item.vertices[1].x = item.vertices[0].x + item.size;
-			item.vertices[1].y = item.vertices[0].y;
-			item.vertices[1].z = item.vertices[0].z;
-			item.vertices[2].x = item.vertices[1].x;
-			item.vertices[2].y = item.vertices[1].y + item.size;
-			item.vertices[2].z = item.vertices[1].z;
-			item.vertices[3].x = item.vertices[0].x;
-			item.vertices[3].y = item.vertices[2].y;
-			item.vertices[3].z = item.vertices[2].z;
+			if(m_Grounded)
+			{
+				item.vertices[0].x = item.position.x - half_size;
+				item.vertices[0].y = m_Position.y;
+				item.vertices[0].z = item.position.y - half_size;
+				item.vertices[1].x = item.vertices[0].x + item.size;
+				item.vertices[1].y = item.vertices[0].y;
+				item.vertices[1].z = item.vertices[0].z;
+				item.vertices[2].x = item.vertices[1].x;
+				item.vertices[2].y = item.vertices[1].y;
+				item.vertices[2].z = item.vertices[1].z + item.size;
+				item.vertices[3].x = item.vertices[0].x;
+				item.vertices[3].y = item.vertices[2].y;
+				item.vertices[3].z = item.vertices[2].z;
+			}
+			else
+			{
+				item.vertices[0].x = item.position.x - half_size;
+				item.vertices[0].y = item.position.y - half_size;
+				item.vertices[0].z = m_Position.z;
+				item.vertices[1].x = item.vertices[0].x + item.size;
+				item.vertices[1].y = item.vertices[0].y;
+				item.vertices[1].z = item.vertices[0].z;
+				item.vertices[2].x = item.vertices[1].x;
+				item.vertices[2].y = item.vertices[1].y + item.size;
+				item.vertices[2].z = item.vertices[1].z;
+				item.vertices[3].x = item.vertices[0].x;
+				item.vertices[3].y = item.vertices[2].y;
+				item.vertices[3].z = item.vertices[2].z;
+			}
 		}
-		{// TODO: color
+		{// color
 			float opa_accel = item.emitter->opacity_accel*delta_time;
 			float r_accel = item.emitter->color_accel.r*delta_time;
 			float g_accel = item.emitter->color_accel.r*delta_time;
@@ -169,6 +197,15 @@ void ofxParticleEffect2D::SubmitChanges()
 	{
 		memcpy(m_Vertices+i*4, m_ParticlePool[i].vertices, size);
 	}
+}
+void ofxParticleEffect2D::SetGrounded(bool value)
+{
+	m_Grounded = value;
+	// TODO: push this particle to higher render priority
+}
+bool ofxParticleEffect2D::IsGrounded()
+{
+	return m_Grounded;
 }
 void ofxParticleEffect2D::PauseResume()
 {

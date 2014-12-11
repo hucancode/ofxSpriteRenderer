@@ -42,50 +42,55 @@ bool ofxShaderProgram::Load(string vs_path, string fs_path)
 		glDeleteProgram(m_ProgramId);
 		return false;
 	}
-	{
-		m_AttributeMap["a_position"]			= glGetAttribLocation(m_ProgramId, "a_position");
-		m_AttributeMap["a_uv"]					= glGetAttribLocation(m_ProgramId, "a_uv");
-		m_AttributeMap["a_color"]				= glGetAttribLocation(m_ProgramId, "a_color");
-		m_AttributeMap["a_color_intensity"]		= glGetAttribLocation(m_ProgramId, "a_color_intensity");
-		m_AttributeMap["a_opacity"]				= glGetAttribLocation(m_ProgramId, "a_opacity");
-		m_UniformMap["u_texture"]				= glGetUniformLocation(m_ProgramId, "u_texture");
-		m_UniformMap["u_modelview_matrix"]		= glGetUniformLocation(m_ProgramId, "u_modelview_matrix");
-		m_UniformMap["u_projection_matrix"]		= glGetUniformLocation(m_ProgramId, "u_projection_matrix");
-		m_UniformMap["u_transform_matrix"]		= glGetUniformLocation(m_ProgramId, "u_transform_matrix");
-		m_UniformMap["u_cam_inverse_matrix"]	= glGetUniformLocation(m_ProgramId, "u_cam_inverse_matrix");
-	}
+	BuildReferenceMap();
 	return true;
 }
 void ofxShaderProgram::Bind()
 {
 	glUseProgram(m_ProgramId);
-	// --------------
+	BindReferenceMap();
+}
+void ofxShaderProgram::BuildReferenceMap()
+{
+	m_AttributeMap["a_position"]			= glGetAttribLocation(m_ProgramId, "a_position");
+	m_AttributeMap["a_uv"]					= glGetAttribLocation(m_ProgramId, "a_uv");
+	m_AttributeMap["a_color"]				= glGetAttribLocation(m_ProgramId, "a_color");
+	m_AttributeMap["a_color_intensity"]		= glGetAttribLocation(m_ProgramId, "a_color_intensity");
+	m_AttributeMap["a_opacity"]				= glGetAttribLocation(m_ProgramId, "a_opacity");
+	m_UniformMap["u_texture"]				= glGetUniformLocation(m_ProgramId, "u_texture");
+	m_UniformMap["u_modelview_matrix"]		= glGetUniformLocation(m_ProgramId, "u_modelview_matrix");
+	m_UniformMap["u_projection_matrix"]		= glGetUniformLocation(m_ProgramId, "u_projection_matrix");
+	m_UniformMap["u_transform_matrix"]		= glGetUniformLocation(m_ProgramId, "u_transform_matrix");
+	m_UniformMap["u_cam_inverse_matrix"]	= glGetUniformLocation(m_ProgramId, "u_cam_inverse_matrix");
+}
+void ofxShaderProgram::BindReferenceMap()
+{
 	int stride = sizeof(ofxVertex);
 	glEnableVertexAttribArray	(m_AttributeMap["a_position"]);
 	glVertexAttribPointer		(m_AttributeMap["a_position"],			3, GL_FLOAT, GL_FALSE, 
-																			stride, (GLvoid*)offsetof(ofxVertex, x));
+		stride, (GLvoid*) offsetof(ofxVertex, x));
 	glEnableVertexAttribArray	(m_AttributeMap["a_uv"]);
 	glVertexAttribPointer		(m_AttributeMap["a_uv"],				2, GL_FLOAT, GL_FALSE, 
-																			stride, (GLvoid*)offsetof(ofxVertex, u));
+		stride, (GLvoid*) offsetof(ofxVertex, u));
 	glEnableVertexAttribArray	(m_AttributeMap["a_color"]);
 	glVertexAttribPointer		(m_AttributeMap["a_color"],				3, GL_FLOAT, GL_FALSE, 
-																			stride, (GLvoid*) offsetof(ofxVertex, r));
+		stride, (GLvoid*) offsetof(ofxVertex, r));
 	glEnableVertexAttribArray	(m_AttributeMap["a_color_intensity"]);
 	glVertexAttribPointer		(m_AttributeMap["a_color_intensity"],	1, GL_FLOAT, GL_FALSE, 
-																			stride, (GLvoid*) offsetof(ofxVertex, color_intensity));
+		stride, (GLvoid*) offsetof(ofxVertex, color_intensity));
 	glEnableVertexAttribArray	(m_AttributeMap["a_opacity"]);
 	glVertexAttribPointer		(m_AttributeMap["a_opacity"],			1, GL_FLOAT, GL_FALSE, 
-																			stride, (GLvoid*) offsetof(ofxVertex, opacity));
+		stride, (GLvoid*) offsetof(ofxVertex, opacity));
 	// --------------
 	glUniform1i					(m_UniformMap["u_texture"],				0);
 	glUniformMatrix4fv			(m_UniformMap["u_modelview_matrix"],	1, GL_FALSE, 
-																			ofxRENDERER->GetModelViewMatrix().getPtr());
+		ofxRENDERER->GetModelViewMatrix().getPtr());
 	glUniformMatrix4fv			(m_UniformMap["u_projection_matrix"],	1, GL_FALSE, 
-																			ofxRENDERER->GetProjectionMatrix().getPtr());
+		ofxRENDERER->GetProjectionMatrix().getPtr());
 	glUniformMatrix4fv			(m_UniformMap["u_transform_matrix"],	1, GL_FALSE, 
-																			ofxRENDERER->GetTransformation().getPtr());
+		ofxRENDERER->GetTransformation().getPtr());
 	glUniformMatrix4fv			(m_UniformMap["u_cam_inverse_matrix"],	1, GL_FALSE, 
-																			ofxRENDERER->GetInverseModelViewMatrix().getPtr());
+		ofxRENDERER->GetInverseModelViewMatrix().getPtr());
 }
 void ofxShaderProgram::Unbind()
 {

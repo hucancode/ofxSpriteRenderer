@@ -7,7 +7,6 @@ ofxSpriteCommand::ofxSpriteCommand()
 	m_Texture = 0;
 	m_Shader = 0;
 	m_Vertices = new ofxVertex[COMMAND_VERTEX_CAPACITY];
-	m_VerticesSize = 0;
 }
 ofxSpriteCommand::~ofxSpriteCommand()
 {
@@ -17,7 +16,7 @@ ofxSpriteCommand::~ofxSpriteCommand()
 void ofxSpriteCommand::Render()
 {
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBOId);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(ofxVertex)*m_VerticesSize, &m_Vertices[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(ofxVertex)*m_VerticesSize, &m_Vertices[0], GL_DYNAMIC_DRAW);
 	m_Shader->Bind();
 	m_Texture->Bind();
 
@@ -27,7 +26,7 @@ void ofxSpriteCommand::Render()
 	m_Shader->Unbind();
 	m_Texture->Unbind();
 }
-bool ofxSpriteCommand::PushSprite(ofxSpriteBase* sprite)
+bool ofxSpriteCommand::PushSprite(ofxBaseSprite* sprite)
 {
 	int new_size = m_VerticesSize + sprite->GetVerticesSize();
 	if(new_size >= COMMAND_VERTEX_CAPACITY)
@@ -37,7 +36,6 @@ bool ofxSpriteCommand::PushSprite(ofxSpriteBase* sprite)
 	memcpy(&m_Vertices[m_VerticesSize], sprite->GetVertices(), sizeof(ofxVertex)*sprite->GetVerticesSize());
 	m_VerticesSize = new_size;
 	return true;
-	
 }
 ofxTexture* ofxSpriteCommand::GetTexture()
 {
@@ -54,12 +52,4 @@ void ofxSpriteCommand::SetTexture(ofxTexture* texture)
 void ofxSpriteCommand::SetShader(ofxShaderProgram* shader)
 {
 	m_Shader = shader;
-}
-ofxVertex* ofxSpriteCommand::GetVertices()
-{
-	return m_Vertices;
-}
-GLsizei ofxSpriteCommand::GetVerticesSize()
-{
-	return m_VerticesSize;
 }

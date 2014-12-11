@@ -1,7 +1,7 @@
 #pragma once
 #include "ofMain.h"
 #include "ofxOrthoCamera.h"
-#include "ofxSpriteBase.h"
+#include "ofxBaseSprite.h"
 #include "ofxSpriteCommand.h"
 
 #define FAR_SCREEN_DISTANCE_THRESHOLD 6000.0
@@ -9,22 +9,17 @@
 #define FAR_SCREEN_UPDATE_SEQUENCE 100
 #define IN_SCREEN_UPDATE_SEQUENCE 20
 
-/*
-TODO: 
-- particle effect support
-- text render support
-*/
 class ofxSpriteRenderer
 {
 	friend ofxSpriteCommand;
-	friend ofxSpriteBase;
+	friend ofxBaseSprite;
 public:
 	static ofxSpriteRenderer*	s_Instance;
 	static ofxSpriteRenderer*	GetInstance();
 	static void					DestroyInstance();
 private:
-	ofxSpriteBases			m_Sprites;
-	ofxSpriteCommands		m_Commands;
+	ofxBaseSprites			m_Sprites;
+	ofxBaseCommands			m_Commands;
 #ifdef _DEBUG
 	int						m_DrawnBatches;
 	int						m_DrawnVertices;
@@ -42,8 +37,8 @@ public:
 	ofxSpriteRenderer();
 	~ofxSpriteRenderer();
 	void					Render();
-	void					PushSprite(ofxSpriteBase* sprite);
-	void					EraseSprite(ofxSpriteBase* sprite);
+	void					PushSprite(ofxBaseSprite* sprite);
+	void					EraseSprite(ofxBaseSprite* sprite);
 	void					Update();
 	void					SetRenderSize(unsigned int width, unsigned int height);
 private:

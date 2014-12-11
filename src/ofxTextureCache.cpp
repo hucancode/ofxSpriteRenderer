@@ -30,6 +30,7 @@ ofxTextureCache::~ofxTextureCache()
 }
 ofxTexture* ofxTextureCache::GetResource(string resource_file)
 {
+	int a = 10;
 	if(m_ResourceMap[resource_file] == 0)
 	{
 		ofxTexture* resource = new ofxTexture();

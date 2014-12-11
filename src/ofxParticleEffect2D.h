@@ -1,5 +1,5 @@
 #pragma once
-#include "ofxSpriteBase.h"
+#include "ofxBaseSprite.h"
 
 /*
 note: this effect has all of it's particle stick to a plane
@@ -62,7 +62,7 @@ struct ofxParticle2D
 
 typedef vector<ofxEmitter2D*> ofxEmitter2Ds;
 class ofxParticleEffect2D
-	:public ofxSpriteBase
+	:public ofxBaseSprite
 {
 private:
 	static ofxTexture*			m_SharedParticleTexture;
@@ -76,6 +76,7 @@ private:
 	unsigned short				m_ParticleCount;
 	bool						m_Paused;
 	bool						m_Stopped;
+	bool						m_Grounded;
 public:
 	static void					LoadSharedParticleTexture();
 	static void					BuildForceTable();
@@ -87,12 +88,15 @@ public:
 	~ofxParticleEffect2D();
 	void						Load(string xml_file);
 	void						AddEmitter(ofxEmitter2D* emitter);
-	virtual void				Update(float delta_time);
+	virtual void				Update(const float delta_time);
 	virtual void				SubmitChanges();
+public:
+	void						SetGrounded(bool value);
+	bool						IsGrounded();
 	void						PauseResume();
 	bool						IsPaused();
 	void						Stop();
 	void						ForceStop();
 	bool						IsStopped();
 };
-#define DEFAULT_PARTICLE_SHADER "particle2d"
+#define DEFAULT_PARTICLE2D_SHADER "particle2d"

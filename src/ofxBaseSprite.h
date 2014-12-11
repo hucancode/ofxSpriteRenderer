@@ -19,7 +19,7 @@ enum SPRITE_OCCLUSION
 	SPRITE_OCCLUSION_UNKNOWN,		// need to update occlusion, now
 };
 
-class ofxSpriteBase
+class ofxBaseSprite
 {
 	friend class ofxSpriteRenderer;
 	friend class ofxSpriteCommand;
@@ -35,9 +35,10 @@ protected:
 	ofxVertex*			m_Vertices;
 	GLsizei				m_VerticesSize;
 	int					m_ID;
+	bool				m_CustomRendered;
 public:
-	ofxSpriteBase();
-	~ofxSpriteBase();
+	ofxBaseSprite();
+	~ofxBaseSprite();
 	virtual void		Update(const float delta_time);
 	virtual void		SubmitChanges();
 	ofVec3f				GetPosition();
@@ -51,6 +52,7 @@ public:
 	virtual void		LoadShader(string shader_path);
 	virtual void		SetTexture(string texture_path);
 	ofxTexture*			GetTexture();
+	bool				IsCustomRendered();
 private:
 	void				SetID(int id);
 	int					GetID();
@@ -62,4 +64,4 @@ private:
 	void				SetDimensionChange(bool value);
 	bool				GetDimensionChange();
 };
-typedef vector<ofxSpriteBase*> ofxSpriteBases;
+typedef vector<ofxBaseSprite*> ofxBaseSprites;

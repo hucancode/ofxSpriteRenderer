@@ -1,8 +1,8 @@
-#include "ofxSpriteBase.h"
+#include "ofxBaseSprite.h"
 #include "ofxSpriteRenderer.h"
 #include "ofxShaderProgramCache.h"
 #include "ofxTextureCache.h"
-ofxSpriteBase::ofxSpriteBase()
+ofxBaseSprite::ofxBaseSprite()
 {
 	m_VerticesSize = 0;
 	m_Vertices = 0;
@@ -11,27 +11,28 @@ ofxSpriteBase::ofxSpriteBase()
 	m_Texture = 0;
 	m_PositionChange = true;
 	m_DimensionChange = true;
+	m_CustomRendered = false;
 }
-ofxSpriteBase::~ofxSpriteBase()
+ofxBaseSprite::~ofxBaseSprite()
 {
 	if(m_Shader) m_Shader->DecreaseReference();
 	if(m_Texture) m_Texture->DecreaseReference();
 }
-void ofxSpriteBase::MoveTo(const float x, const float y, const float z)
+void ofxBaseSprite::MoveTo(const float x, const float y, const float z)
 {
 	MoveTo(ofVec3f(x,y,z));
 }
-void ofxSpriteBase::MoveTo(const ofVec3f position)
+void ofxBaseSprite::MoveTo(const ofVec3f position)
 {
 	m_Position = position;
 	m_PositionChange = true;
 	m_Occlusion = SPRITE_OCCLUSION_UNKNOWN;
 }
-void ofxSpriteBase::MoveBy(const float x, const float y, const float z)
+void ofxBaseSprite::MoveBy(const float x, const float y, const float z)
 {
 	MoveBy(ofVec3f(x,y,z));
 }
-void ofxSpriteBase::MoveBy(const ofVec3f accelerator)
+void ofxBaseSprite::MoveBy(const ofVec3f accelerator)
 {
 	m_Position += accelerator;
 	m_PositionChange = true;
@@ -41,26 +42,26 @@ void ofxSpriteBase::MoveBy(const ofVec3f accelerator)
 		m_Occlusion = SPRITE_OCCLUSION_UNKNOWN;
 	}
 }
-void ofxSpriteBase::SetVisible(bool value)
+void ofxBaseSprite::SetVisible(bool value)
 {
 	m_Visible = value;
 }
-bool ofxSpriteBase::IsVisible()
+bool ofxBaseSprite::IsVisible()
 {
 	return m_Visible;
 }
-SPRITE_OCCLUSION ofxSpriteBase::GetOcclusion()
+SPRITE_OCCLUSION ofxBaseSprite::GetOcclusion()
 {
 	return m_Occlusion;
 }
-ofVec3f ofxSpriteBase::GetPosition()
+ofVec3f ofxBaseSprite::GetPosition()
 {
 	return m_Position;
 }
-void ofxSpriteBase::Update(const float delta_time)
+void ofxBaseSprite::Update(const float delta_time)
 {
 }
-void ofxSpriteBase::SubmitChanges()
+void ofxBaseSprite::SubmitChanges()
 {
 	if(!(ofxRENDERER->IsCameraMove() || ofxRENDERER->IsCameraForce() || m_PositionChange))
 		return;
@@ -85,7 +86,7 @@ void ofxSpriteBase::SubmitChanges()
 	}
 }
 
-void ofxSpriteBase::LoadShader(string shader_path)
+void ofxBaseSprite::LoadShader(string shader_path)
 {
 	if(m_Shader)
 	{
@@ -94,11 +95,11 @@ void ofxSpriteBase::LoadShader(string shader_path)
 	m_Shader = ofxSHADERPROGRAMCACHE->GetResource(shader_path);
 	m_Shader->IncreaseReference();
 }
-ofxShaderProgram* ofxSpriteBase::GetShader()
+ofxShaderProgram* ofxBaseSprite::GetShader()
 {
 	return m_Shader;
 }
-void ofxSpriteBase::SetTexture(string texture_path)
+void ofxBaseSprite::SetTexture(string texture_path)
 {
 	if(m_Texture)
 	{
@@ -107,39 +108,43 @@ void ofxSpriteBase::SetTexture(string texture_path)
 	m_Texture = ofxTEXTURECACHE->GetResource(texture_path);
 	m_Texture->IncreaseReference();
 }
-ofxTexture* ofxSpriteBase::GetTexture()
+ofxTexture* ofxBaseSprite::GetTexture()
 {
 	return m_Texture;
 }
-void ofxSpriteBase::SetID(int id)
+bool ofxBaseSprite::IsCustomRendered()
+{
+	return m_CustomRendered;
+}
+void ofxBaseSprite::SetID(int id)
 {
 	m_ID = id;
 }
-int ofxSpriteBase::GetID()
+int ofxBaseSprite::GetID()
 {
 	return m_ID;
 }
-ofxVertex* ofxSpriteBase::GetVertices()
+ofxVertex* ofxBaseSprite::GetVertices()
 {
 	return m_Vertices;
 }
-GLsizei ofxSpriteBase::GetVerticesSize()
+GLsizei ofxBaseSprite::GetVerticesSize()
 {
 	return m_VerticesSize;
 }
-void ofxSpriteBase::SetPositionChange(bool value)
+void ofxBaseSprite::SetPositionChange(bool value)
 {
 	m_PositionChange = value;
 }
-bool ofxSpriteBase::GetPositionChange()
+bool ofxBaseSprite::GetPositionChange()
 {
 	return m_PositionChange;
 }
-void ofxSpriteBase::SetDimensionChange(bool value)
+void ofxBaseSprite::SetDimensionChange(bool value)
 {
 	m_DimensionChange = value;
 }
-bool ofxSpriteBase::GetDimensionChange()
+bool ofxBaseSprite::GetDimensionChange()
 {
 	return m_DimensionChange;
 }

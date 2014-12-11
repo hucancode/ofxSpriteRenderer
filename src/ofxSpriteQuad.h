@@ -1,11 +1,11 @@
 #pragma once
 #include "ofMain.h"
-#include "ofxSpriteBase.h"
+#include "ofxBaseSprite.h"
 
 
 class ofxSpriteCommand;
 class ofxSpriteRenderer;
-class ofxSpriteQuad : public ofxSpriteBase
+class ofxSpriteQuad : public ofxBaseSprite
 {
 	friend ofxSpriteCommand;
 	friend ofxSpriteRenderer;

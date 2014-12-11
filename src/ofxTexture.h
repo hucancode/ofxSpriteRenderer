@@ -1,7 +1,8 @@
 #pragma once
 #include "ofMain.h"
 #include "ofxResource.h"
-#include "FreeImage.h"
+#include "IL/il.h"
+#include "IL/ilu.h"
 
 class ofxBitmapFont;
 
@@ -10,17 +11,31 @@ class ofxTexture
 {
 	friend class ofxBitmapFont;
 private:
-	FIBITMAP*			m_ImageData;
+	ILuint				m_ImageId;
 	GLuint				m_TextureId;
-	ofVec2f				m_Dimension;
+	GLfloat				m_UnitWidth;
+	GLfloat				m_UnitHeight;
+	GLuint				m_Width;
+	GLuint				m_Height;
+	ILubyte				m_BytePerPixel; 
+	bool				m_Locked;
+	bool				m_Compressed;
 public:
 	ofxTexture();
 	virtual ~ofxTexture();
+	void				SetCompressed(bool value);
+	bool				IsCompressed();
 	virtual bool		Load(string texture_file);
 	void				SubmitChanges();
 	void				Bind(GLuint slot=0);
 	void				Unbind(GLuint slot=0);
-	ofVec2f				GetDimension();
+	GLuint				GetWidth();
+	GLuint				GetHeight();
+	GLfloat				GetUnitWidth();
+	GLfloat				GetUnitHeight();
+public:
+	void				Lock();
+	bool				IsLocked();
 public:
 	void				Allocate(unsigned int width, unsigned int height);
 	ofColor				GetPixel(ofVec2f position);
@@ -29,12 +44,12 @@ public:
 	void				FlipY();
 	void				BlockTransfer(ofxTexture* source, ofRectangle source_rect, ofVec2f dest_pos, int alpha = 255);
 	void				StretchTransfer(ofxTexture* source, ofRectangle source_rect, ofRectangle dest_rect, int alpha = 255);
-	void				Fill(ofColor color, ofRectangle dest_rect);
+	void				Fill(ofFloatColor color, ofRectangle dest_rect);
 	void				Clear(ofRectangle dest_rect);
 	void				Clear();
 	void				DrawString(string text, ofxBitmapFont* font, ofVec2f dest_pos, unsigned char font_size = 0);
 	void				DrawString(string text, ofxBitmapFont* font, ofRectangle dest_rect, unsigned char font_size = 0);
 private:
-	FIBITMAP*			GetImageData();
+	ILuint				GetDevilId();
 };
 typedef vector<ofxTexture*> ofxTextures;
