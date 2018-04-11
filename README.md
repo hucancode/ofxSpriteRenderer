@@ -1,8 +1,6 @@
 ![sprite renderer](https://github.com/ngoaho91/ofxSpriteRenderer/blob/master/ofxaddons_thumbnail.png)
 =================
-```
-// in case the banner looks pink, it's because of i'm color blind
-```
+
 Key features:
 -----------------
 - Resource management, include textures, shaders, fonts
